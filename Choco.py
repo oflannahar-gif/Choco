@@ -132,8 +132,6 @@ async def owner_handler(event):
         running_kebun = False
         await event.reply("⏹ Kebun STOPPED")
 
-    elif msg == "status":
-        await safe_send("/status")
 
 # ---------------- MAIN ----------------
 async def main():
@@ -152,4 +150,5 @@ async def main():
     await client.run_until_disconnected()
 
 with client:
+
     client.loop.run_until_complete(main())
