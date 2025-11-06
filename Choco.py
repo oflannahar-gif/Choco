@@ -26,12 +26,10 @@ logging.basicConfig(level=logging.INFO, format="[%(asctime)s] %(message)s")
 logger = logging.getLogger("petani")
 
 # ---------------- VARIABEL ----------------
-running_maling = False
+state = {
+    "energi_habis": False
+}
 running_kebun = False
-
-last_sent = {}  # {kode: timestamp}
-DELAY_BETWEEN_CODES = 120   # 2 menit
-DELAY_REPEAT_CODE = 3600    # 1 jam
 
 # EXP tracking
 exp_current = 0
@@ -125,10 +123,10 @@ async def owner_handler(event):
     global running_maling, running_kebun
     msg = (event.raw_text or "").strip().lower()
 
-    if msg == "start kebun":
+    if msg == "start":
         running_kebun = True
         await event.reply("▶️ Kebun STARTED")
-    elif msg == "stop kebun":
+    elif msg == "stop":
         running_kebun = False
         await event.reply("⏹ Kebun STOPPED")
 
@@ -149,7 +147,7 @@ async def handle_restore(event):
             if not state.get("energi_habis", True):
                 print("🛑 Energi sudah pulih, hentikan percobaan restore.")
                 break
-            await safe_send_cepat("restore", BOT_USERNAME)
+            await safe_send("restore", BOT_USERNAME)
             print(f"[RESTORE TRY] {i+1}/100")
             await asyncio.sleep(5)
         return
@@ -165,9 +163,7 @@ async def handle_restore(event):
 # ---------------- MAIN ----------------
 async def main():
     print(">> Bot siap jalan.")
-    print("             'start kebun'  / 'stop kebun'")
-    print("             'start all'    / 'stop all'")
-    print("             'status'")
+    print("             'start'  / 'stop'")
 
     # jalankan worker & loop
     asyncio.create_task(message_worker())
@@ -181,6 +177,7 @@ async def main():
 with client:
 
     client.loop.run_until_complete(main())
+
 
 
 
