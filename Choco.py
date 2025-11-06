@@ -174,3 +174,6 @@ async def main():
         except Exception as e:
             print(f"[ERROR] {e}, mencoba reconnect dalam 5 detik...")
             await asyncio.sleep(5)
+# ---------------- RUN ----------------
+with client:
+    client.loop.run_until_complete(main())
