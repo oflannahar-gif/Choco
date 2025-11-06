@@ -133,6 +133,35 @@ async def owner_handler(event):
         await event.reply("⏹ Kebun STOPPED")
 
 
+@client.on(events.NewMessage(incoming=True, chats=BOT_USERNAME))
+async def handle_restore(event):
+    msg = (event.raw_text or "").lower()
+
+    # Jika energi habis
+    if "/tidur" in msg or "/sleep" in msg:
+        print("⚠️ Energi habis, mencoba restore...")
+        state["energi_habis"] = True
+        for v in state.values():
+            if isinstance(v, dict) and "pause" in v:
+                v["pause"] = True
+        for i in range(100):
+            await asyncio.sleep(3)
+            if not state.get("energi_habis", True):
+                print("🛑 Energi sudah pulih, hentikan percobaan restore.")
+                break
+            await safe_send_cepat("restore", BOT_USERNAME)
+            print(f"[RESTORE TRY] {i+1}/100")
+            await asyncio.sleep(5)
+        return
+
+    # Jika sudah berhasil dipulihkan
+    if "berhasil dipulihkan" in msg or "energi berhasil dipulihkan" in msg:
+        print("✅ Energi berhasil dipulihkan (global)")
+        state["energi_habis"] = False
+        for v in state.values():
+            if isinstance(v, dict) and "pause" in v:
+                v["pause"] = False
+
 # ---------------- MAIN ----------------
 async def main():
     print(">> Bot siap jalan.")
@@ -152,6 +181,7 @@ async def main():
 with client:
 
     client.loop.run_until_complete(main())
+
 
 
 
