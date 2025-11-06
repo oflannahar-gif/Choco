@@ -120,7 +120,7 @@ async def game_handler(event):
 # ---------------- HANDLER OWNER ----------------
 @client.on(events.NewMessage(from_users=OWNER_ID))
 async def owner_handler(event):
-    global running_maling, running_kebun
+    global running_kebun
     msg = (event.raw_text or "").strip().lower()
 
     if msg == "start":
@@ -147,7 +147,7 @@ async def handle_restore(event):
             if not state.get("energi_habis", True):
                 print("🛑 Energi sudah pulih, hentikan percobaan restore.")
                 break
-            await safe_send("restore", BOT_USERNAME)
+            await safe_send("restore")
             print(f"[RESTORE TRY] {i+1}/100")
             await asyncio.sleep(5)
         return
@@ -177,6 +177,7 @@ async def main():
 with client:
 
     client.loop.run_until_complete(main())
+
 
 
 
