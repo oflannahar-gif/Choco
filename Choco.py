@@ -65,7 +65,7 @@ async def loop_kebun():
     while True:
         if running_kebun:
             # tanam wortel
-            await safe_send("/tanam_Wortel_75")
+            await safe_send("/tanam_Wortel_100")
             print("[KEBUN] Tanam wortel")
             await asyncio.sleep(2)
 
@@ -177,5 +177,6 @@ async def main():
 # ---------------- RUN ----------------
 with client:
     client.loop.run_until_complete(main())
+
 
 
