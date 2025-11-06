@@ -165,21 +165,12 @@ async def main():
     print(">> Bot siap jalan.")
     print("             'start'  / 'stop'")
 
-    # jalankan worker & loop
-    asyncio.create_task(message_worker())
-    asyncio.create_task(loop_kebun())
-
-    # kirim /status awal
-    await safe_send("/status")
-
-    await client.run_until_disconnected()
-
-with client:
-
-    client.loop.run_until_complete(main())
-
-
-
-
-
-
+    while True:
+        try:
+            asyncio.create_task(message_worker())
+            asyncio.create_task(loop_kebun())
+            await safe_send("/status")
+            await client.run_until_disconnected()
+        except Exception as e:
+            print(f"[ERROR] {e}, mencoba reconnect dalam 5 detik...")
+            await asyncio.sleep(5)
